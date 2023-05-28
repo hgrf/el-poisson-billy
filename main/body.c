@@ -35,3 +35,22 @@ void body_close_mouth()
 {
     gpio_set_level(MOUTH_ENABLE, 0);
 }
+
+void body_wiggle_head()
+{
+    gpio_set_level(BODY_DIRA, 1);
+    gpio_set_level(BODY_DIRB, 0);
+    gpio_set_level(BODY_ENABLE, 1);
+}
+
+void body_wiggle_tail()
+{
+    gpio_set_level(BODY_DIRA, 0);
+    gpio_set_level(BODY_DIRB, 1);
+    gpio_set_level(BODY_ENABLE, 1);
+}
+
+void body_wiggle_stop()
+{
+    gpio_set_level(BODY_ENABLE, 0);
+}

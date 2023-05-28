@@ -71,10 +71,23 @@ void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
             esp_log_buffer_hex("", param->data_ind.data, param->data_ind.len);
         }
 
-        if (param->data_ind.data[0] == 'o')
+        switch(param->data_ind.data[0]) {
+        case 'o':
             body_open_mouth();
-        else if (param->data_ind.data[0] == 'c')
+            break;
+        case 'c':
             body_close_mouth();
+            break;
+        case 'h':
+            body_wiggle_head();
+            break;
+        case 't':
+            body_wiggle_tail();
+            break;
+        case 's':
+            body_wiggle_stop();
+            break;
+        }
         break;
     case ESP_SPP_CONG_EVT:
         ESP_LOGI(SPP_TAG, "ESP_SPP_CONG_EVT");
