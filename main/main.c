@@ -30,10 +30,15 @@
 
 #include "sgtl5000.h"
 
+#include "bt_app_spp.h"
+
 #define MCLK_FREQ               (11289600)
 
 /* device name */
 #define LOCAL_DEVICE_NAME    "El Poisson"
+
+static const esp_spp_mode_t esp_spp_mode = ESP_SPP_MODE_CB;
+static const bool esp_spp_enable_l2cap_ertm = true;
 
 /* event for stack up */
 enum {
@@ -117,6 +122,16 @@ static void bt_av_hdl_stack_evt(uint16_t event, void *p_param)
     /* when do the stack up, this event comes */
     case BT_APP_EVT_STACK_UP: {
         esp_bt_dev_set_device_name(LOCAL_DEVICE_NAME);
+
+        assert(esp_spp_register_callback(esp_spp_cb) == ESP_OK);
+
+        esp_spp_cfg_t bt_spp_cfg = {
+            .mode = esp_spp_mode,
+            .enable_l2cap_ertm = esp_spp_enable_l2cap_ertm,
+            .tx_buffer_size = 0, /* Only used for ESP_SPP_MODE_VFS mode */
+        };
+        assert(esp_spp_enhanced_init(&bt_spp_cfg) == ESP_OK);
+
         esp_bt_gap_register_callback(bt_app_gap_cb);
 
         assert(esp_avrc_ct_init() == ESP_OK);
