@@ -238,6 +238,7 @@ static void volume_set_by_local_host(uint8_t volume)
     /* set the volume in protection of lock */
     _lock_acquire(&s_volume_lock);
     s_volume = volume;
+    sgtl5000_set_volume(0x7f - volume);
     _lock_release(&s_volume_lock);
 
     /* send notification response to remote AVRCP controller */
@@ -443,6 +444,7 @@ static void bt_av_hdl_avrc_tg_evt(uint16_t event, void *p_param)
         uint8_t *bda = rc->conn_stat.remote_bda;
         ESP_LOGI(BT_RC_TG_TAG, "AVRC conn_state evt: state %d, [%02x:%02x:%02x:%02x:%02x:%02x]",
                  rc->conn_stat.connected, bda[0], bda[1], bda[2], bda[3], bda[4], bda[5]);
+        volume_set_by_local_host(0x7f - 0x18);
         break;
     }
     /* when passthrough commanded, this event comes */
