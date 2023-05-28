@@ -30,6 +30,8 @@
 
 #include "sys/lock.h"
 
+#include "sgtl5000.h"
+
 /* AVRCP used transaction labels */
 #define APP_RC_CT_TL_GET_CAPS            (0)
 #define APP_RC_CT_TL_GET_META_DATA       (1)
@@ -226,6 +228,7 @@ static void volume_set_by_controller(uint8_t volume)
     /* set the volume in protection of lock */
     _lock_acquire(&s_volume_lock);
     s_volume = volume;
+    sgtl5000_set_volume(0x7f - volume);
     _lock_release(&s_volume_lock);
 }
 
