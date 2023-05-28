@@ -33,7 +33,7 @@
 #define MCLK_FREQ               (11289600)
 
 /* device name */
-#define LOCAL_DEVICE_NAME    "ESP_SPEAKER"
+#define LOCAL_DEVICE_NAME    "El Poisson"
 
 /* event for stack up */
 enum {
