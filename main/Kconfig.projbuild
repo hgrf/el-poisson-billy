@@ -20,7 +20,7 @@ menu "A2DP Example Configuration"
 
     config EXAMPLE_I2S_LRCK_PIN
         int "I2S LRCK (WS) GPIO"
-        default 22
+        default 27
         depends on EXAMPLE_A2DP_SINK_OUTPUT_EXTERNAL_I2S
         help
             GPIO number to use for I2S LRCK(WS) Driver.
@@ -34,7 +34,7 @@ menu "A2DP Example Configuration"
 
     config EXAMPLE_I2S_DATA_PIN
         int "I2S DATA GPIO"
-        default 25
+        default 14
         depends on EXAMPLE_A2DP_SINK_OUTPUT_EXTERNAL_I2S
         help
             GPIO number to use for I2S Data Driver.
