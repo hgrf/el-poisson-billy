@@ -25,6 +25,13 @@
 #include "esp_a2dp_api.h"
 #include "esp_avrc_api.h"
 
+#include "driver/ledc.h"
+#include "driver/i2c.h"
+
+#include "sgtl5000.h"
+
+#define MCLK_FREQ               (11289600)
+
 /* device name */
 #define LOCAL_DEVICE_NAME    "ESP_SPEAKER"
 
@@ -152,6 +159,45 @@ void app_main(void)
         err = nvs_flash_init();
     }
     ESP_ERROR_CHECK(err);
+
+    /* set up I2C bus */
+    i2c_port_t i2c_master_port = 1;
+    i2c_config_t conf = {
+        .mode = I2C_MODE_MASTER,
+        .sda_io_num = 13,
+        .sda_pullup_en = GPIO_PULLUP_ENABLE,        /* From I2C driver datasheet; internal pull-up may not be sufficient */
+        .scl_io_num = 4,
+        .scl_pullup_en = GPIO_PULLUP_ENABLE,
+        .master = {
+            .clk_speed = 100000
+        }
+    };
+    ESP_ERROR_CHECK(i2c_param_config(i2c_master_port, &conf));
+    ESP_ERROR_CHECK(i2c_driver_install(i2c_master_port, conf.mode, 0, 0, 0));
+
+    /* set up MCLK signal */
+    ledc_timer_config_t ledc_timer = {
+        .duty_resolution = LEDC_TIMER_2_BIT,
+        .freq_hz = MCLK_FREQ,
+        .speed_mode = LEDC_HIGH_SPEED_MODE,
+        .timer_num = LEDC_TIMER_0
+    };
+    ledc_timer_config(&ledc_timer);
+
+    ledc_channel_config_t ledc_channel = {
+        .channel = LEDC_CHANNEL_0,
+        .duty = 2,
+        .gpio_num = 15,
+        .speed_mode = LEDC_HIGH_SPEED_MODE,
+        .hpoint = 0,
+        .timer_sel = LEDC_TIMER_0
+    };
+    ledc_channel_config(&ledc_channel);
+
+    vTaskDelay(500 / portTICK_PERIOD_MS);
+
+    /* initialize audio codec */
+    sgtl5000_init(i2c_master_port, 0b0001010);
 
     /*
      * This example only uses the functions of Classical Bluetooth.
