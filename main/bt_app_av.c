@@ -62,8 +62,6 @@ static void bt_i2s_driver_uninstall(void);
 static void volume_set_by_controller(uint8_t volume);
 /* set volume by local host */
 static void volume_set_by_local_host(uint8_t volume);
-/* simulation volume change */
-static void volume_change_simulation(void *arg);
 /* a2dp event handler */
 static void bt_av_hdl_a2d_evt(uint16_t event, void *p_param);
 /* avrc controller event handler */
@@ -85,7 +83,6 @@ static const char *s_a2d_audio_state_str[] = {"Suspended", "Stopped", "Started"}
 static esp_avrc_rn_evt_cap_mask_t s_avrc_peer_rn_cap;
                                              /* AVRC target notification capability bit mask */
 static _lock_t s_volume_lock;
-static TaskHandle_t s_vcs_task_hdl = NULL;    /* handle for volume change simulation task */
 static uint8_t s_volume = 0;                 /* local volume value */
 static bool s_volume_notify;                 /* notify volume change or not */
 #ifndef CONFIG_EXAMPLE_A2DP_SINK_OUTPUT_INTERNAL_DAC
@@ -246,18 +243,6 @@ static void volume_set_by_local_host(uint8_t volume)
         rn_param.volume = s_volume;
         esp_avrc_tg_send_rn_rsp(ESP_AVRC_RN_VOLUME_CHANGE, ESP_AVRC_RN_RSP_CHANGED, &rn_param);
         s_volume_notify = false;
-    }
-}
-
-static void volume_change_simulation(void *arg)
-{
-    ESP_LOGI(BT_RC_TG_TAG, "start volume change simulation");
-
-    for (;;) {
-        /* volume up locally every 10 seconds */
-        vTaskDelay(10000 / portTICK_PERIOD_MS);
-        uint8_t volume = (s_volume + 5) & 0x7f;
-        volume_set_by_local_host(volume);
     }
 }
 
@@ -455,13 +440,6 @@ static void bt_av_hdl_avrc_tg_evt(uint16_t event, void *p_param)
         uint8_t *bda = rc->conn_stat.remote_bda;
         ESP_LOGI(BT_RC_TG_TAG, "AVRC conn_state evt: state %d, [%02x:%02x:%02x:%02x:%02x:%02x]",
                  rc->conn_stat.connected, bda[0], bda[1], bda[2], bda[3], bda[4], bda[5]);
-        if (rc->conn_stat.connected) {
-            /* create task to simulate volume change */
-            xTaskCreate(volume_change_simulation, "vcsTask", 2048, NULL, 5, &s_vcs_task_hdl);
-        } else {
-            vTaskDelete(s_vcs_task_hdl);
-            ESP_LOGI(BT_RC_TG_TAG, "Stop volume change simulation");
-        }
         break;
     }
     /* when passthrough commanded, this event comes */
