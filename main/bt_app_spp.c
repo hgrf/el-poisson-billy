@@ -4,6 +4,8 @@
 
 #include "esp_log.h"
 
+#include "body.h"
+
 #define SPP_TAG "SPP"
 #define SPP_SERVER_NAME "SPP_SERVER"
 
@@ -68,6 +70,11 @@ void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
         if (param->data_ind.len < 128) {
             esp_log_buffer_hex("", param->data_ind.data, param->data_ind.len);
         }
+
+        if (param->data_ind.data[0] == 'o')
+            body_open_mouth();
+        else if (param->data_ind.data[0] == 'c')
+            body_close_mouth();
         break;
     case ESP_SPP_CONG_EVT:
         ESP_LOGI(SPP_TAG, "ESP_SPP_CONG_EVT");

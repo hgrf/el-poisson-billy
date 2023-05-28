@@ -29,7 +29,7 @@
 #include "driver/i2c.h"
 
 #include "sgtl5000.h"
-
+#include "body.h"
 #include "bt_app_spp.h"
 
 #define MCLK_FREQ               (11289600)
@@ -174,6 +174,9 @@ void app_main(void)
         err = nvs_flash_init();
     }
     ESP_ERROR_CHECK(err);
+
+    /* set up body */
+    body_init();
 
     /* set up I2C bus */
     i2c_port_t i2c_master_port = 1;
