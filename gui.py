@@ -8,8 +8,11 @@ from PyQt5.QtCore import pyqtSignal, pyqtSlot, Qt, QThread
 from PyQt5.QtGui import QPixmap, QKeyEvent, QImage
 from PyQt5.QtWidgets import QApplication, QLabel, QPushButton
 from PyQt5.QtBluetooth import (
-    QBluetoothServiceInfo, QBluetoothSocket, QBluetoothDeviceDiscoveryAgent,
-    QBluetoothDeviceInfo, QBluetoothUuid
+    QBluetoothServiceInfo,
+    QBluetoothSocket,
+    QBluetoothDeviceDiscoveryAgent,
+    QBluetoothDeviceInfo,
+    QBluetoothUuid,
 )
 
 from enum import IntEnum
@@ -40,13 +43,11 @@ class VideoThread(QThread):
 
     def run(self):
         detector = dlib.get_frontal_face_detector()
-        predictor = dlib.shape_predictor(
-            "shape_predictor_68_face_landmarks.dat"
-        )
+        predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
         # grab the indexes of the facial landmarks for the mouth
         (mStart, mEnd) = (49, 68)
         # define one constants, for mouth aspect ratio to indicate open mouth
-        MOUTH_AR_THRESH = 0.69   # 0.79
+        MOUTH_AR_THRESH = 0.69  # 0.79
 
         mouthOpen = False
 
@@ -174,7 +175,9 @@ class MainWidget(QLabel):
         self.btnRelax.setGeometry(450, 250, 100, 30)
 
         self.image_label = QLabel(self)
-        self.image_label.setGeometry(self.background.width(), 0, self.width() - self.background.width(), 400)
+        self.image_label.setGeometry(
+            self.background.width(), 0, self.width() - self.background.width(), 400
+        )
 
         self.agent = QBluetoothDeviceDiscoveryAgent()
         self.agent.deviceDiscovered.connect(self.onDeviceDiscovered)
@@ -209,7 +212,9 @@ class MainWidget(QLabel):
         h, w, ch = rgb_image.shape
         bytes_per_line = ch * w
         convert_to_Qt_format = QImage(rgb_image.data, w, h, bytes_per_line, QImage.Format_RGB888)
-        p = convert_to_Qt_format.scaled(self.image_label.width(), self.image_label.height(), Qt.KeepAspectRatio)
+        p = convert_to_Qt_format.scaled(
+            self.image_label.width(), self.image_label.height(), Qt.KeepAspectRatio
+        )
         return QPixmap.fromImage(p)
 
     def close(self):
@@ -244,15 +249,12 @@ class MainWidget(QLabel):
         print("Device discovered:", dev.name())
         if dev.name() == "El Poisson":
             self.agent.stop()
-            
-            self.socket = QBluetoothSocket(
-                QBluetoothServiceInfo.Protocol.RfcommProtocol
-            )
+
+            self.socket = QBluetoothSocket(QBluetoothServiceInfo.Protocol.RfcommProtocol)
             self.socket.error.connect(self.onSocketError)
             self.socket.stateChanged.connect(self.onSocketStateChange)
             self.socket.connectToService(
-                dev.address(),
-                1 # QBluetoothUuid(QBluetoothUuid.ServiceClassUuid.SerialPort)
+                dev.address(), 1  # QBluetoothUuid(QBluetoothUuid.ServiceClassUuid.SerialPort)
             )
 
     def onMidi(self, event, data=None):
@@ -276,7 +278,7 @@ class MainWidget(QLabel):
         print("Sending note:", note)
         # TODO: here we want to temporarily ignore incoming midi messages in case
         #       Ableton (for example) is configured to loop back
-        self.midiout.send_message([0x90, int(note), 0x7f])
+        self.midiout.send_message([0x90, int(note), 0x7F])
         self.sendNoteToRemote(note)
 
     def toggleMouth(self):
@@ -284,7 +286,7 @@ class MainWidget(QLabel):
             self.sendNote(MainWidget.Note.CLOSE)
         else:
             self.sendNote(MainWidget.Note.OPEN)
-        self.mouthIsOpen = not self.mouthIsOpen        
+        self.mouthIsOpen = not self.mouthIsOpen
 
 
 if __name__ == "__main__":
