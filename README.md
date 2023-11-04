@@ -30,3 +30,11 @@ pip install -r requirements.txt
 - https://gist.github.com/jamesbulpin/f3b20833ab0bf035ae8fd3a69405b222
 - https://github.com/TensorFlux/BTBillyBass
 
+### Mouth synchronization
+
+- https://mittalparveen652.medium.com/face-eye-and-mouth-detection-with-python-458f2a028674
+- https://hackprojects.wordpress.com/tutorials/opencv-python-tutorials/opencv-mouth-detection-using-haar-cascades/
+- https://github.com/mauckc/mouth-open
+- https://github.com/opencv/opencv/tree/master/data/haarcascades
+- https://github.com/peterbraden/node-opencv/blob/master/data/haarcascade_mcs_mouth.xml
+- https://github.com/DanielSWolf/rhubarb-lip-sync
