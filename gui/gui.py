@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import rtmidi
+import sys
 
 from PyQt5.QtCore import pyqtSlot, Qt
 from PyQt5.QtGui import QCloseEvent, QKeyEvent, QImage, QPixmap
@@ -177,9 +178,12 @@ class MainWidget(QLabel):
             self.socket = QBluetoothSocket(QBluetoothServiceInfo.Protocol.RfcommProtocol)
             self.socket.error.connect(self.onSocketError)
             self.socket.stateChanged.connect(self.onSocketStateChange)
-            self.socket.connectToService(
-                dev.address(), 1  # QBluetoothUuid(QBluetoothUuid.ServiceClassUuid.SerialPort)
+            s = (
+                1
+                if sys.platform == "darwin"
+                else QBluetoothUuid(QBluetoothUuid.ServiceClassUuid.SerialPort)
             )
+            self.socket.connectToService(dev.address(), s)
 
     def onMidi(self, event, data=None):
         message, deltatime = event
