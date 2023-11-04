@@ -50,10 +50,13 @@ class VideoThread(QThread):
         MOUTH_AR_THRESH = 0.69  # 0.79
 
         mouthOpen = False
+        frame = None
+
+        self.isRunning = True
 
         # capture from web cam
         cap = cv2.VideoCapture(0)
-        while True:
+        while self.isRunning:
             ret, frame = cap.read()
             frame = imutils.resize(frame, width=640)
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -111,6 +114,13 @@ class VideoThread(QThread):
 
             if ret:
                 self.change_pixmap_signal.emit(frame)
+
+        if frame is not None:
+            frame.fill(0)
+            self.change_pixmap_signal.emit(frame)
+
+    def stop(self):
+        self.isRunning = False
 
 
 class MainWidget(QLabel):
@@ -174,6 +184,11 @@ class MainWidget(QLabel):
         self.btnRelax.clicked.connect(lambda: self.sendNote(MainWidget.Note.TAIL))
         self.btnRelax.setGeometry(450, 250, 100, 30)
 
+        self.btnToggleCV = QPushButton("Mouth recognition off", self)
+        self.btnToggleCV.setCheckable(True)
+        self.btnToggleCV.clicked.connect(lambda: self.toggleCV())
+        self.btnToggleCV.setGeometry(400, 350, 200, 30)
+
         self.image_label = QLabel(self)
         self.image_label.setGeometry(
             self.background.width(), 0, self.width() - self.background.width(), 400
@@ -186,9 +201,18 @@ class MainWidget(QLabel):
         self.thread = VideoThread()
         self.thread.change_pixmap_signal.connect(self.update_image)
         self.thread.mouthChanged.connect(self.updateMouth)
-        self.thread.start()
 
         self.show()
+
+    def toggleCV(self):
+        self.btnToggleCV.setText(
+            f'Mouth recognition {"on" if self.btnToggleCV.isChecked() else "off"}'
+        )
+        if self.btnToggleCV.isChecked():
+            self.thread.start()
+        else:
+            self.thread.stop()
+            self.thread.wait()
 
     def keyPressEvent(self, ev: QKeyEvent):
         t = ev.text().lower()
