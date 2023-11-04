@@ -5,7 +5,7 @@ import numpy as np
 import rtmidi
 
 from PyQt5.QtCore import pyqtSignal, pyqtSlot, Qt, QThread
-from PyQt5.QtGui import QPixmap, QKeyEvent, QImage
+from PyQt5.QtGui import QCloseEvent, QKeyEvent, QImage, QPixmap
 from PyQt5.QtWidgets import QApplication, QLabel, QPushButton
 from PyQt5.QtBluetooth import (
     QBluetoothServiceInfo,
@@ -213,6 +213,11 @@ class MainWidget(QLabel):
         self.thread.mouthChanged.connect(self.updateMouth)
 
         self.show()
+
+    def closeEvent(self, a0: QCloseEvent) -> None:
+        self.thread.stop()
+        self.thread.wait()
+        return super().closeEvent(a0)
 
     def toggleCV(self):
         self.btnToggleCV.setText(
