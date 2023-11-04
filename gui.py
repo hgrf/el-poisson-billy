@@ -63,6 +63,16 @@ class VideoThread(QThread):
 
             # detect faces in the grayscale frame
             rects = detector(gray, 0)
+            if len(rects) == 0:
+                cv2.putText(
+                        frame,
+                        "No face detected!",
+                        (30, 30),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        0.7,
+                        (0, 0, 255),
+                        2,
+                    )
             # loop over the face detections
             for rect in rects:
                 # determine the facial landmarks for the face region, then
