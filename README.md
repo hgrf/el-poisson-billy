@@ -4,9 +4,22 @@ El Poisson is yet another hacked Big Mouth Billy Bass. It was a little contribut
 music video "[Un effort](https://www.youtube.com/watch?v=xZalNH8_v24)". This particular hack
 features a Bluetooth audio sink and motor control via bluetooth. The python GUI is easy to use and
 can even connect to Ableton via a virtual MIDI interface, so that the fish's movements can be
-programmed as a MIDI track. 
+programmed as a MIDI track.
 
-## Setup
+## Hardware
+
+### Components
+
+- Billy the Bass
+- ESP32-DevKitC (https://www.espressif.com/en/products/devkits/esp32-devkitc/overview)
+- Teensy Audio Shield Rev D (https://www.pjrc.com/store/teensy3_audio.html)
+- H-bridge L293D (https://www.st.com/en/motor-drivers/l293d.html)
+
+### Schematic
+
+![](hw/el_poisson_billy_rev1.svg)
+
+## Software
 
 Please use ESP-IDF v5.1.1 to build the firmware.
 
@@ -38,3 +51,9 @@ pip install -r requirements.txt
 - https://github.com/opencv/opencv/tree/master/data/haarcascades
 - https://github.com/peterbraden/node-opencv/blob/master/data/haarcascade_mcs_mouth.xml
 - https://github.com/DanielSWolf/rhubarb-lip-sync
+
+### KiCad symbols and footprints
+
+- ESP32-DevKitC: https://github.com/espressif/kicad-libraries
+- Teensy Audio Shield Rev D: https://forum.pjrc.com/threads/65435
+
