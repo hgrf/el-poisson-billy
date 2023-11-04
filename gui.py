@@ -201,7 +201,7 @@ class MainWidget(QLabel):
 
         self.image_label = QLabel(self)
         self.image_label.setGeometry(
-            self.background.width(), 0, self.width() - self.background.width(), 400
+            self.background.width(), 0, self.width() - self.background.width(), self.height()
         )
 
         self.agent = QBluetoothDeviceDiscoveryAgent()
