@@ -17,7 +17,7 @@ programmed as a MIDI track.
 
 ### Schematic
 
-![](hw/el_poisson_billy_rev1.svg)
+[![](hw/el_poisson_billy_rev1.svg)](https://raw.githubusercontent.com/hgrf/el-poisson-billy/main/hw/el_poisson_billy_rev1.svg)
 
 ## Software
 
@@ -30,6 +30,8 @@ python3 -m venv venv
 . venv/bin/activate
 python -m pip install --upgrade pip
 pip install -r requirements.txt
+
+python -m gui
 ```
 
 ## References
