@@ -58,7 +58,7 @@ class MainWidget(QLabel):
         self.mouthIsOpen = False
         self.bodyState = 0
 
-        self.background = QPixmap("poisson.png")
+        self.background = QPixmap("img/poisson.png")
         self.setEnabled(False)
         self.setWindowTitle("El Poisson Billy")
         self.setGeometry(0, 0, self.background.width(), self.background.height())
