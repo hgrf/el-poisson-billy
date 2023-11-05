@@ -54,6 +54,13 @@ The firmware is based on the following examples from ESP-IDF:
 
 Please use ESP-IDF v5.1.1 to build the firmware.
 
+To flash a binary release, use (for example):
+
+```sh
+pip install esptool==4.6.2
+esptool.py write_flash 0x10000 el-poisson-billy-0.1.0.bin
+```
+
 ## References
 
 ### Other Billy Bass projects
