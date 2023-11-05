@@ -21,12 +21,9 @@ programmed as a MIDI track.
 
 ## Software
 
-The firmware is based on the following examples from ESP-IDF:
+### Python GUI
 
-- https://github.com/espressif/esp-idf/tree/v5.1.1/examples/bluetooth/bluedroid/classic_bt/a2dp_sink
-- https://github.com/espressif/esp-idf/blob/v5.1.1/examples/bluetooth/bluedroid/classic_bt/bt_spp_acceptor
-
-Please use ESP-IDF v5.1.1 to build the firmware.
+![](img/screenshot.png)
 
 You can set up the python app with:
 
@@ -38,6 +35,15 @@ pip install -r requirements.txt
 
 python -m gui
 ```
+
+### Firmware
+
+The firmware is based on the following examples from ESP-IDF:
+
+- https://github.com/espressif/esp-idf/tree/v5.1.1/examples/bluetooth/bluedroid/classic_bt/a2dp_sink
+- https://github.com/espressif/esp-idf/blob/v5.1.1/examples/bluetooth/bluedroid/classic_bt/bt_spp_acceptor
+
+Please use ESP-IDF v5.1.1 to build the firmware.
 
 ## References
 
