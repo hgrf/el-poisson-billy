@@ -61,8 +61,9 @@ class MainWidget(QLabel):
         self.background = QPixmap("poisson.png")
         self.setEnabled(False)
         self.setWindowTitle("El Poisson Billy")
-        self.setGeometry(0, 0, 900, 400)
+        self.setGeometry(0, 0, self.background.width(), self.background.height())
         self.setPixmap(self.background)
+        self.setAlignment(Qt.AlignTop | Qt.AlignLeft)
 
         self.btnMouth = QPushButton("Mouth (Q/Z)", self)
         self.btnMouth.clicked.connect(self.toggleMouth)
@@ -87,7 +88,7 @@ class MainWidget(QLabel):
 
         self.image_label = QLabel(self)
         self.image_label.setGeometry(
-            self.background.width(), 0, self.width() - self.background.width(), self.height()
+            0, self.background.height(), self.width(), self.height()
         )
 
         self.agent = QBluetoothDeviceDiscoveryAgent()
@@ -110,10 +111,12 @@ class MainWidget(QLabel):
             f'Mouth recognition {"on" if self.btnToggleCV.isChecked() else "off"}'
         )
         if self.btnToggleCV.isChecked():
+            self.setGeometry(0, 0, self.background.width(), 2 * self.background.height())
             self.thread.start()
         else:
             self.thread.stop()
             self.thread.wait()
+            self.setGeometry(0, 0, self.background.width(), self.background.height())
 
     def keyPressEvent(self, ev: QKeyEvent):
         t = ev.text().lower()
