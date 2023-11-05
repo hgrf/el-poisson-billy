@@ -6,6 +6,13 @@ features a Bluetooth audio sink and motor control via bluetooth. The python GUI 
 can even connect to Ableton via a virtual MIDI interface, so that the fish's movements can be
 programmed as a MIDI track.
 
+## Features
+
+- ESP32 configured as bluetooth audio sink with additional serial port profile (SPP) for control.
+- Teensy Audio Shield Rev D for high-quality audio output.
+- H-bridge L293D for efficient motor control.
+- Python GUI for easy interaction with the device.
+
 ## Hardware
 
 ### Components
