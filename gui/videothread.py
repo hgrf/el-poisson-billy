@@ -29,6 +29,7 @@ def mouth_aspect_ratio(mouth):
 class VideoThread(QThread):
     change_pixmap_signal = pyqtSignal(np.ndarray)
     mouthChanged = pyqtSignal(bool)
+    marUpdate = pyqtSignal(int)
 
     def run(self):
         detector = dlib.get_frontal_face_detector()
@@ -74,8 +75,8 @@ class VideoThread(QThread):
                 # coordinates to compute the mouth aspect ratio
                 mouth = shape[mStart:mEnd]
 
-                mouthMAR = mouth_aspect_ratio(mouth)
-                mar = mouthMAR
+                mar = mouth_aspect_ratio(mouth)
+                self.marUpdate.emit(mar)
                 # compute the convex hull for the mouth, then
                 # visualize the mouth
                 mouthHull = cv2.convexHull(mouth)
