@@ -26,9 +26,11 @@ class MainWidget(QLabel):
         HEAD = 62
         TAIL = 63
         STOP = 64
+        SET = 65
 
     noteToCommand = {
         Note.OPEN: "o",
+        Note.SET: "m",
         Note.CLOSE: "c",
         Note.HEAD: "h",
         Note.TAIL: "t",
@@ -97,7 +99,8 @@ class MainWidget(QLabel):
 
         self.thread = VideoThread()
         self.thread.change_pixmap_signal.connect(self.update_image)
-        self.thread.mouthChanged.connect(self.updateMouth)
+        # self.thread.mouthChanged.connect(self.updateMouth)
+        self.thread.marUpdate.connect(self.updateMar)
 
         self.show()
 
@@ -125,9 +128,15 @@ class MainWidget(QLabel):
 
         return super().keyPressEvent(ev)
 
-    @pyqtSlot(bool)
-    def updateMouth(self, open: bool):
-        self.sendNoteToRemote(MainWidget.Note.OPEN if open else MainWidget.Note.CLOSE)
+    @pyqtSlot(float)
+    def updateMar(self, mar: float):
+        mar = (mar - 0.5) * 2
+        mar = max(0, min(1, mar))
+        self.sendNoteToRemote(MainWidget.Note.SET, int(mar * 0x7F))
+
+    # @pyqtSlot(bool)
+    # def updateMouth(self, open: bool):
+    #    self.sendNoteToRemote(MainWidget.Note.OPEN if open else MainWidget.Note.CLOSE)
 
     @pyqtSlot(np.ndarray)
     def update_image(self, frame):
@@ -198,19 +207,22 @@ class MainWidget(QLabel):
             if note in self.noteToCommand.keys():
                 self.sendNoteToRemote(note)
 
-    def sendNoteToRemote(self, note: Note):
-        print("Sending note to remote:", note)
+    def sendNoteToRemote(self, note: Note, velocity: int = 0x7F):
+        print("Sending note to remote:", note, "velocity:", velocity)
         if self.socket is None or not self.socket.isWritable():
             print("Cannot send command")
             return
-        self.socket.write(self.noteToCommand[note].encode())
+        self.socket.write(
+            self.noteToCommand[note].encode()
+            + (velocity.to_bytes(1, "little") if note == MainWidget.Note.SET else b"")
+        )
 
-    def sendNote(self, note: Note):
+    def sendNote(self, note: Note, velocity: int = 0x7F):
         print("Sending note:", note)
         # TODO: here we want to temporarily ignore incoming midi messages in case
         #       Ableton (for example) is configured to loop back
-        self.midiout.send_message([0x90, int(note), 0x7F])
-        self.sendNoteToRemote(note)
+        self.midiout.send_message([0x90, int(note), velocity])
+        self.sendNoteToRemote(note, velocity)
 
     def toggleMouth(self):
         if self.mouthIsOpen:

@@ -78,6 +78,9 @@ void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
         case 'c':
             body_close_mouth();
             break;
+        case 'm':
+            body_set_mouth(param->data_ind.data[1]);
+            break;
         case 'h':
             body_wiggle_head();
             break;

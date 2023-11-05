@@ -3,6 +3,7 @@
 
 void body_init();
 void body_open_mouth();
+void body_set_mouth(unsigned char pos);
 void body_close_mouth();
 void body_wiggle_head();
 void body_wiggle_tail();
