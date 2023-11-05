@@ -29,7 +29,7 @@ def mouth_aspect_ratio(mouth):
 class VideoThread(QThread):
     change_pixmap_signal = pyqtSignal(np.ndarray)
     mouthChanged = pyqtSignal(bool)
-    marUpdate = pyqtSignal(int)
+    marUpdate = pyqtSignal(float)
 
     def run(self):
         detector = dlib.get_frontal_face_detector()
