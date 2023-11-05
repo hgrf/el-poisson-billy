@@ -15,6 +15,8 @@ programmed as a MIDI track.
 
 ## Hardware
 
+![](img/wiring.png)
+
 ### Components
 
 - Billy the Bass
