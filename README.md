@@ -74,6 +74,10 @@ Please use ESP-IDF v5.1.1 to build the firmware.
 - https://github.com/peterbraden/node-opencv/blob/master/data/haarcascade_mcs_mouth.xml
 - https://github.com/DanielSWolf/rhubarb-lip-sync
 
+### Others
+
+- PyQt and OpenCV: https://gist.github.com/docPhil99/ca4da12c9d6f29b9cea137b617c7b8b1
+
 ### KiCad symbols and footprints
 
 - ESP32-DevKitC: https://github.com/espressif/kicad-libraries
